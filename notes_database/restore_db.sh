@@ -29,6 +29,14 @@ if [ -f "database_backup.sql" ]; then
                 -h localhost -p ${DB_PORT} -U ${DB_USER} -d postgres \
                 < database_backup.sql 2>/dev/null
             echo "✓ Database restored successfully"
+
+            # Ensure notes app schema/seed exists after restore (idempotent)
+            if [ -f "./init_db.sh" ]; then
+                echo "Initializing notes app schema/seed..."
+                chmod +x ./init_db.sh 2>/dev/null || true
+                ./init_db.sh || echo "⚠ init_db.sh failed (database may still be usable)"
+            fi
+
             exit 0
         fi
     fi

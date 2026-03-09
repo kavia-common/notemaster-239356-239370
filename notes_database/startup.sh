@@ -154,3 +154,11 @@ echo "To use with Node.js viewer, run: source db_visualizer/postgres.env"
 echo "To connect to the database, use one of the following commands:"
 echo "psql -h localhost -U ${DB_USER} -d ${DB_NAME} -p ${DB_PORT}"
 echo "$(cat db_connection.txt)"
+
+# Initialize notes app schema + seed data (idempotent)
+if [ -f "./init_db.sh" ]; then
+    echo ""
+    echo "Initializing notes app schema/seed..."
+    chmod +x ./init_db.sh 2>/dev/null || true
+    ./init_db.sh || echo "⚠ init_db.sh failed (database may still be usable)"
+fi
